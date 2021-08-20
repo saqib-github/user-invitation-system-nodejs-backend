@@ -20,5 +20,6 @@ router.post(
   //     }
   //   }
 );
+router.post("/signin", controller.signin);
 
 module.exports = router;

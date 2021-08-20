@@ -8,8 +8,8 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   const user = new User({
-    first_name: req.body.firstName,
-    last_name: req.body.lastName,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     address: req.body.address,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -70,17 +70,17 @@ exports.signup = (req, res) => {
 };
 exports.signin = (req, res) => {
   User.findOne({
-    username: req.body.username,
+    email: req.body.email,
   })
     .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
-        res.status(500).send({ message: err });
+        res.status(500).json({ message: err });
         return;
       }
 
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        return res.status(404).json({ message: "User Not found." });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -105,9 +105,6 @@ exports.signin = (req, res) => {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
       res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
         roles: authorities,
         accessToken: token,
       });

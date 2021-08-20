@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 // importing routes
 const authRoute = require("./app/routes/auth.routes.js");
+const userRoute = require("./app/routes/user.routes.js");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.listen(PORT, () => {
 
 // routes middlewares
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 // initial function callings
 
