@@ -7,22 +7,19 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.getUser = (req, res) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
-    try {
-      token = req.headers.authorization.split("Bearer")[1];
-      console.log("token: " + token);
-
-      const verify = jwt.verify(token, config.secret);
-      console.log("verify:id " + verify.id)
-      User.findById(verify.id).select('-password').then((user) => {
-        console.log("user: " + user)
-        return res.status(200).send(user);
-      })
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
+  let token = req.headers["x-access-token"];
+  var decoded = jwt.decode(token, { complete: true });
+  console.log("decoded", decoded);
+  console.log("user_id", decoded.payload.id);
+  User.findById(decoded.payload.id)
+    .select("-password")
+    .then((user) => {
+      console.log("user: " + user);
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      return res.status(400).send(err.message);
+    });
 
   // var signature;
   // if (jwt.verify(req.headers.authorization, config.secret)) {
@@ -46,6 +43,13 @@ exports.getUser = (req, res) => {
   //     console.log("error", err);
   //   });
 };
+
+exports.sendMail = (req, res) => {
+  console.log("Sending mail api", req.email);
+  res.send('sendmailapi')
+};
+
+exports.sendMail = (req, res) => {};
 
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
