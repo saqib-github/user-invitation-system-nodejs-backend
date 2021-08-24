@@ -8,6 +8,6 @@ const app = express();
 const router = express.Router();
 
 router.get("/", [authJwt.verifyToken], controller.getUser);
-router.post("/", controller.sendMail);
+router.post("/sendmail", [authJwt.verifyToken], controller.sendMail);
 
 module.exports = router;

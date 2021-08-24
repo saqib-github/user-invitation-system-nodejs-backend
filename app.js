@@ -40,7 +40,7 @@ db.mongoose
   });
 
 // set port and listen for request
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is runing on port ${PORT}`);
 });
